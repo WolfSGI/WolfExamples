@@ -22,5 +22,13 @@ def zodb(host: str="0.0.0.0", port: int=8000):
     app.events.lifecycle.on_init.send('startup')
     serve(app, listen=f"{host}:{port}")
 
+
+@cli
+def graphql(host: str="0.0.0.0", port: int=8000):
+    from gql.app import app
+    app.events.lifecycle.on_init.send('startup')
+    serve(app, listen=f"{host}:{port}")
+
+
 if __name__ == '__main__':
     run()
