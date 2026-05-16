@@ -22,7 +22,7 @@ from wolf.rendering.templates import Templates
 from wolf.rendering.ui import UI
 from wolf_sql import SQLDatabase
 
-import register, login, views, actions, ui, folder, document, db, models  # noqa
+from . import register, login, views, actions, ui, folder, document, db, models  # noqa
 
 
 logger = structlog.get_logger("example.routing")
@@ -126,7 +126,7 @@ app.use(
             )
         }
     ),
-    SQLDatabase(url="sqlite:///database.db", echo=True),
+    SQLDatabase(url=f"sqlite:///{HERE / 'database.db'}", echo=True),
     SessionAuthenticator(
         sources={
             "sql": database_source,
@@ -151,10 +151,6 @@ app.services.register_value(actions.Actions, actions.actions)
 q = Queue(connection=Redis())
 app.services.register_value(Queue, q)
 
-app.events.lifecycle.on_init.send(
-    'startup',
-    config={"example": "Config on startup"}
-)
 
 #### Example of lifecycle events
 @app.events.lifecycle.on_request.connect

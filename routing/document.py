@@ -8,7 +8,7 @@ from wolf.app.render import html, renderer
 from wolf.app.services.flash import SessionMessages
 from wolf.app import Application
 from wolf_form import Form, trigger
-from models import Document
+from .models import Document
 
 
 routes = Router()

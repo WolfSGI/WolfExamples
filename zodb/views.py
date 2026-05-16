@@ -7,8 +7,8 @@ from wolf.app.render import html, renderer
 from wolf.app.services.flash import SessionMessages
 from wolf_form import Form, trigger
 
-import models
-from resources import somejs
+from . import models
+from .resources import somejs
 
 
 views = ViewRegistry()

@@ -14,8 +14,10 @@ from wolf.rendering.ui import UI
 from ZODB.FileStorage import FileStorage
 from ZODB import Connection, DB
 
-import ui, views, resources, middleware, models  # noqa
+from . import ui, views, resources, middleware, models  # noqa
 
+
+HERE = pathlib.Path(__file__).parent.resolve()
 
 libraries = ResourceManager('/static')
 libraries.add_package_static('deform:static')
@@ -30,7 +32,7 @@ app = Application(
         middleware.TransactionMiddleware(),
         HTTPSession(
             store=http_session_file.FileStore(
-                pathlib.Path('sessions'), 3000
+                HERE / 'sessions', 3000
             ),
             secret="secret",
             salt="salt",
@@ -46,7 +48,9 @@ app = Application(
 )
 
 app.use(
-    middleware.ZODB(db=DB(FileStorage("example.fs"))),
+    middleware.ZODB(db=DB(
+        FileStorage(str(HERE / "example.fs"))
+    )),
     libraries,
     Flash(),
     SessionAuthenticator(

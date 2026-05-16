@@ -1,4 +1,5 @@
 import pathlib
+import structlog
 import http_session_file
 from wolf.app import Application
 from wolf.app.middlewares import HTTPSession
@@ -12,7 +13,7 @@ from wolf.rendering.ui import UI
 from wolf_jwt import JWTService
 from wolf_sql import SQLDatabase
 
-import ui, views, store, factories, resources  # noqa
+from . import ui, views, store, factories, resources  # noqa
 
 
 logger = structlog.get_logger("example.traject")
@@ -57,7 +58,7 @@ app.use(
     PostOffice(
         path=HERE / 'test.mail'
     ),
-    SQLDatabase(url="sqlite:///database.db"),
+    SQLDatabase(url=f"sqlite:///{HERE / 'database.db'}"),
     Flash(),
     UI(
         slots=ui.slots,
@@ -94,10 +95,6 @@ app.use(
     )
 )
 
-app.events.lifecycle.on_init.send(
-    'startup',
-    config={"example": "Config on startup"}
-)
 
 #### Example of lifecycle events
 @app.events.lifecycle.on_request.connect

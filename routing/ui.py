@@ -5,8 +5,8 @@ from wolf.app.decorators import ondemand
 from wolf.app.request import Request
 from wolf.app.services.flash import SessionMessages
 from wolf.abc.identity import User, anonymous
-from actions import Actions
-from login import Login
+from .actions import Actions
+from .login import Login
 
 
 slots = SlotRegistry()

@@ -6,7 +6,7 @@ from wolf.app.request import Request
 from wolf.json import JSONSchema
 from wolf_sql import Session
 
-from models import Person
+from .models import Person
 
 
 class Login(SourceAction):

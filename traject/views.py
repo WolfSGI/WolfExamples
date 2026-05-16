@@ -1,19 +1,20 @@
 import colander
 import deform
 import jsonschema_colander.types
-from hamcrest import equal_to
-from sqlmodel import Session as SQLSession, select
 
 from autorouting import matchers
-from wolf.app import Application
+from hamcrest import equal_to
+from sqlmodel import Session as SQLSession, select
 from wolf.abc.resolvers import URIResolver
 from wolf.abc.resolvers.traject import ViewRegistry
-from wolf.app.render import html, renderer
+from wolf.app import Application
 from wolf.app.decorators import ondemand
+from wolf.app.render import html, renderer
 from wolf_form import Form, trigger
-from models import Folder, Document
-from store import Stores, SchemaKey
-from resources import somejs
+
+from .models import Folder, Document
+from .store import Stores, SchemaKey
+from .resources import somejs
 
 
 registry = ViewRegistry()

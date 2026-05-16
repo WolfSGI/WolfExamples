@@ -7,7 +7,7 @@ from wolf.app.services.flash import SessionMessages
 from wolf.rendering.ui import SlotRegistry, LayoutRegistry, SubSlotRegistry
 from wolf.app.decorators import ondemand
 from wolf.abc.resolvers import Located
-import models
+from . import models
 
 
 slots = SlotRegistry()
