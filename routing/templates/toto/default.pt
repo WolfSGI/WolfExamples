@@ -1,0 +1,4 @@
+<article>
+  <h1 tal:content="">
+  <div tal:replace="structure rendered_form" />
+</article>
