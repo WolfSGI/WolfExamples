@@ -32,10 +32,8 @@ class GraphQLView(
         sub_response: type[Response],
     ) -> Response:
 
-        return sub_response(
-            200, self.encode_json(response_data),
-            {"Content-Type": "application/json"}
-        )
+        return sub_response.to_json(
+            200, response_data, headers={"Content-Type": "application/json"})
 
     def render_graphql_ide(self, request: Request) -> Response:
         return Response(200, self.graphql_ide_html)

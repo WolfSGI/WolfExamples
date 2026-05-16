@@ -17,7 +17,6 @@ class WolfHTTPRequestAdapter(SyncHTTPRequestAdapter):
 
     @property
     def body(self):
-        breakpoint()
         return self.request.environ['wsgi.input'].read()
 
     @property
@@ -30,6 +29,7 @@ class WolfHTTPRequestAdapter(SyncHTTPRequestAdapter):
 
     @property
     def post_data(self):
+        breakpoint()
         return self.request.data.form
 
     @property
@@ -44,7 +44,7 @@ class WolfHTTPRequestAdapter(SyncHTTPRequestAdapter):
 
     @property
     def content_type(self):
-        return self.request.content_type
+        return str(self.request.content_type)
 
     @property
     def url(self) -> str:

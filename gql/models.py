@@ -6,7 +6,7 @@ class Person(SQLModel, table=True):
     email: str = Field(unique=True)
     name: str | None = None
     age: int
-    password: str
+    documents: list["Document"] = Relationship(back_populates="author")
 
 
 class Document(SQLModel, table=True):
