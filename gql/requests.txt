@@ -1,0 +1,5 @@
+mutation {
+  addAuthor(email: "john@test.com", name: "John", age: 45) {
+    id
+  }
+}
