@@ -10,13 +10,20 @@ class Person:
     name: str | None
     age: int
 
+    instance: strawberry.Private[models.Person]
+
+    @strawberry.field
+    def documents(self) -> list["Document"]:
+        return [Document.from_instance(doc) for doc in self.instance.documents]
+
     @classmethod
     def from_instance(cls, instance: models.Person):
         return cls(
             id=instance.id,
             email=instance.email,
             name=instance.name,
-            age=instance.age
+            age=instance.age,
+            instance=instance
         )
 
 
@@ -27,6 +34,8 @@ class Document:
     text: str
     category: str
 
+    instance: strawberry.Private[models.Document]
+
     @strawberry.field
     def author(self) -> Person:
         return Person.from_instance(self.instance.author)
@@ -36,7 +45,9 @@ class Document:
         return cls(
             id=instance.id,
             title=instance.title,
-            text=instance.text
+            text=instance.text,
+            category=instance.category,
+            instance=instance,
         )
 
 
@@ -48,7 +59,7 @@ class AuthorQuery:
         request = info.context["request"]
         sqlsession = request.get(Session)
         statement = select(models.Person)
-        authors = session.exec(statement).all()
+        authors = sqlsession.exec(statement).all()
         return [Person.from_instance(author) for author in authors]
 
 
@@ -81,5 +92,30 @@ class DocumentQuery:
         request = info.context["request"]
         sqlsession = request.get(Session)
         statement = select(models.Document)
-        documents = session.exec(statement).all()
+        documents = sqlsession.exec(statement).all()
         return [Document.from_instance(doc) for doc in documents]
+
+
+@strawberry.type
+class DocumentMutation:
+
+    @strawberry.mutation
+    def add_document(
+            self, info: strawberry.Info,
+            author_id: int,
+            title: str,
+            text: str,
+            category: str
+    ) -> Document:
+        request = info.context["request"]
+        sqlsession = request.get(Session)
+        document = models.Document(
+            author_id=author_id,
+            title=title,
+            text=text,
+            category=category
+        )
+        sqlsession.add(document)
+        sqlsession.commit()
+        sqlsession.refresh(document)
+        return Document.from_instance(document)

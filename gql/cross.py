@@ -29,7 +29,6 @@ class WolfHTTPRequestAdapter(SyncHTTPRequestAdapter):
 
     @property
     def post_data(self):
-        breakpoint()
         return self.request.data.form
 
     @property
