@@ -1,5 +1,36 @@
+# /authors
+
 mutation {
   addAuthor(email: "john@test.com", name: "John", age: 45) {
     id
+  }
+}
+
+{
+  authors {
+    name
+    age
+    documents {
+        title
+    }
+  }
+}
+
+
+# /documents
+
+mutation {
+  addDocument(authorId: 1, title:"Some report", category: "boring", text: "blah.") {
+    id
+  }
+}
+
+{
+  documents(category="") {
+    name
+    age
+    documents {
+        title
+    }
   }
 }
