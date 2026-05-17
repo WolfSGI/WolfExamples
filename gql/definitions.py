@@ -88,10 +88,13 @@ class DocumentQuery:
 
     @strawberry.field
     def documents(
-            self, info: strawberry.Info, category: str) -> list[Document]:
+            self, info: strawberry.Info, category: str | None
+    ) -> list[Document]:
         request = info.context["request"]
         sqlsession = request.get(Session)
         statement = select(models.Document)
+        if category:
+            statement = statement.filter(models.Document.category==category)
         documents = sqlsession.exec(statement).all()
         return [Document.from_instance(doc) for doc in documents]
 
