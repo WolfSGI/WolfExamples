@@ -9,3 +9,4 @@ Examples for Wolf (WSGI Framework)
   python example.py routing
   python example.py zodb
   python example.py traject
+  python example.py graphql
