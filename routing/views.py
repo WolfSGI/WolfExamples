@@ -1,5 +1,4 @@
-from hamcrest.core.base_matcher import BaseMatcher
-from hamcrest.core.description import Description
+from autorouting.matchers import Matcher
 from kettu.headers import Query
 from rq import Queue
 from wolf.abc.identity import User
@@ -13,17 +12,12 @@ from wolf.app.request import Request
 from wolf.app.response import Response
 
 
-class request_content_type(BaseMatcher):
+class ContentTypeMatcher(Matcher):
 
     def __init__(self, *values: str):
         self.values: tuple[str] = tuple(values)
 
-    def describe_to(self, description: Description):
-        description.append_text(
-            'String matching a wilcards string '
-        ).append_text(self.value)
-
-    def _matches(self, request: Request):
+    def matches(self, request: Request):
         return request.accept.negotiate(self.values)
 
 
@@ -72,7 +66,7 @@ def json_view(request):
 
 @routes.register(
     '/test/negotiate',
-    requirements={"request": request_content_type('application/json')})
+    requirements={"request": ContentTypeMatcher('application/json')})
 @json
 def test_json_negotiation(request):
     return {"key": "value"}
@@ -81,7 +75,7 @@ def test_json_negotiation(request):
 @routes.register(
     '/test/negotiate',
     priority=1,
-    requirements={"request": request_content_type('text/html')})
+    requirements={"request": ContentTypeMatcher('text/html')})
 @html
 def test_html_negotiation(request):
     return "key : value"
