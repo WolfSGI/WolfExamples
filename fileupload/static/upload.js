@@ -52,10 +52,10 @@ document.addEventListener('DOMContentLoaded', function () {
                                     if (response.ok) {
                                         load();
                                     } else {
-                                        error('Fehler beim Entfernen');
+                                        error('Error during deletion.');
                                     }
                                 }).catch(function () {
-                                    error('Fehler beim Entfernen');
+                                    error('Error during deletion.');
                                 });
                             },
                             revert: function (uniqueFileId, load, error) {
@@ -67,10 +67,10 @@ document.addEventListener('DOMContentLoaded', function () {
                                     if (response.ok) {
                                         load();
                                     } else {
-                                        error('Fehler beim Entfernen');
+                                        error('Error during deletion.');
                                     }
                                 }).catch(function () {
-                                    error('Fehler beim Entfernen');
+                                    error('Error during deletion.');
                                 });
                             },
                         },
@@ -78,16 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // ── existing files (edit mode) ───────────────
                     var fieldExisting = existingFiles[fieldName];
-                    var removedInput = null;
-
                     if (fieldExisting && fieldExisting.length) {
-                        // Hidden input to track removed existing files
-                        removedInput = document.createElement('input');
-                        removedInput.type = 'hidden';
-                        removedInput.name = fieldName + '_removed';
-                        removedInput.value = '[]';
-                        form.appendChild(removedInput);
-
                         // Populate FilePond with existing files as local entries
                         options.files = fieldExisting.map(function (f) {
                             return {
@@ -102,28 +93,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 },
                             };
                         });
-
-                        // No-op server.load — files are shown without downloading
-                        options.server.load = function (source, load, error, progress, abort) {
-                            // Return a fake response so FilePond shows the file
-                            load(source);
-                            return { abort: function () {} };
-                        };
-
-                        // Track removals of existing (LOCAL) files
-                        options.onremovefile = function (removeError, file) {
-                            if (removeError) return;
-                            // FilePond origin 3 = LOCAL
-                            if (file.origin !== 3) return;
-                            var removed;
-                            try {
-                                removed = JSON.parse(removedInput.value);
-                            } catch (e) {
-                                removed = [];
-                            }
-                            removed.push(file.source);
-                            removedInput.value = JSON.stringify(removed);
-                        };
                     }
                     FilePond.create(input, options);
                 }
