@@ -3,8 +3,6 @@ import structlog
 from wolf.app import Application
 from wolf.app.resolvers import RouteResolver
 from wolf.app.services.resources import ResourceManager
-from wolf.rendering.ui import UI
-from wolf.rendering.templates import Templates
 from .views import router, library
 from .storage import StorageService, Storage
 
@@ -26,7 +24,6 @@ libraries.add_library(library)
 # Install all the services
 app.use(
     libraries,
-    UI(templates=Templates('templates')),
     StorageService(
         Storage('example', HERE / "uploads")
     ),

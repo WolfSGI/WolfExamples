@@ -8,12 +8,14 @@ from wolf.app.response import Response
 from wolf.rendering.resources import JSResource, CSSResource
 from wolf.app.services.resources import Library
 from wolf.app.render import html, json, renderer
+from wolf.rendering.templates import Templates
 from wolf.abc.resolvers import Params
 from .storage import Storage, Uploader
 
 
 router = Router()
 HERE = pathlib.Path(__file__).parent.resolve()
+TEMPLATES = Templates(HERE / 'templates')
 
 
 filepond_css = CSSResource(
@@ -37,7 +39,7 @@ upload = library.bind('upload.js', dependencies=(filepond_css, filepond_js))
 class Index(APIView):
 
     @html(resources=(upload,))
-    @renderer(template='views/index', layout_name=None)
+    @renderer(template=TEMPLATES['views/index'], layout_name=None)
     def GET(self, request: Request):
         storage = request.get(Storage)
         result = defaultdict(list)
