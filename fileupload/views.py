@@ -1,15 +1,16 @@
 import pathlib
 import orjson
 from collections import defaultdict
+from html_resources.library import Library
+from html_resources.resources import JSResource, CSSResource
+from wolf.abc.resolvers import Params
 from wolf.abc.resolvers.routing import Router, APIView
 from wolf.app import Application
+from wolf.app.render import html, json, renderer
 from wolf.app.request import Request
 from wolf.app.response import Response
-from wolf.rendering.resources import JSResource, CSSResource
-from wolf.app.services.resources import Library
-from wolf.app.render import html, json, renderer
 from wolf.rendering.templates import Templates
-from wolf.abc.resolvers import Params
+
 from .storage import Storage, Uploader
 
 
@@ -31,7 +32,7 @@ filepond_js = JSResource(
     bottom=True
 )
 
-library = Library('example', HERE / "static")
+library = Library.from_discovery('example', HERE / "static")
 upload = library.bind('upload.js', dependencies=(filepond_css, filepond_js))
 
 
@@ -51,11 +52,11 @@ class Index(APIView):
                 "type": meta.get("content_type", "application/octet-stream"),
             })
         return {
-            "existing_files_json": orjson.dumps(result)
+            "existing_files_json": orjson.dumps(result).decode()
         }
 
     def POST(self, request: Request):
-        pass
+        return Response.redirect(request.root_path)
 
     def PUT(self, request: Request):
         data = request.data.form

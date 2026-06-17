@@ -7,8 +7,10 @@
       <form novalidate="novalidate"
             data-upload="true"
             method="POST"
-            action="${request.uri()}"
-            data-existing-files="${existing_files_json}">
+            action="${request.uri()}">
+        <script role="existingFiles" type="application/json"
+                tal:content="structure existing_files_json">
+        </script>
         <input type="file" id="myFile" name="filename" />
         <input type="submit" />
       </form>

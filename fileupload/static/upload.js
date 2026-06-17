@@ -16,13 +16,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Parse existing files for edit mode (once per form)
             var existingFiles = {};
-            if (form.dataset.existingFiles) {
-                try {
-                    existingFiles = JSON.parse(form.dataset.existingFiles);
-                } catch (e) {
-                    console.warn('fileupload: invalid data-existing-files JSON', e);
+            document.querySelectorAll('[role="existingFiles"]').forEach(
+                function (el) {
+                    const newData = JSON.parse(el.textContent);
+                    existingFiles = {...existingFiles,...newData}
                 }
-            }
+            );
 
             form.querySelectorAll('input[type="file"]').forEach(
                 function (input) {

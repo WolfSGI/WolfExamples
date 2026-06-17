@@ -3,6 +3,7 @@ import structlog
 from wolf.app import Application
 from wolf.app.resolvers import RouteResolver
 from wolf.app.services.resources import ResourceManager
+from html_resources.store import Repository
 from .views import router, library
 from .storage import StorageService, Storage
 
@@ -17,13 +18,13 @@ app = Application(
     resolver=RouteResolver(router=router),
 )
 
-libraries = ResourceManager('/static')
-libraries.add_library(library)
+libraries = Repository()
+libraries.add(library)
 
 
 # Install all the services
 app.use(
-    libraries,
+    ResourceManager(libraries, '/static'),
     StorageService(
         Storage('example', HERE / "uploads")
     ),
