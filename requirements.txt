@@ -1,5 +1,4 @@
 ZODB
-authsources_keycloak >= 0.3
 colander
 deform == 3.0.1
 http_session_file
@@ -18,3 +17,4 @@ jsonschema_colander@git+https://github.com/novareto/jsonschema_colander.git
 -e git+https://github.com/WolfSGI/wolf_jwt.git#egg=wolf_jwt
 -e git+https://github.com/WolfSGI/wolf_form.git#egg=wolf_form
 -e git+https://github.com/WolfSGI/ticketed_filestore.git#egg=ticketed_filestore
+-e git+https://github.com/WolfSGI/html_resources.git#egg=html_resources

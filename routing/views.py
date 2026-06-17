@@ -53,7 +53,7 @@ def ondemand(root: Application):
 
 @routes.register('/test/bare')
 @html
-@renderer
+@renderer(layout_name=None)
 def bare(request):
     return "This is my bare view"
 

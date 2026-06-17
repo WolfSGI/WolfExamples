@@ -6,9 +6,6 @@ import structlog
 from redis import Redis
 from rq import Queue
 
-from authsources_keycloak.actions import Challenge, Fetch
-from authsources_keycloak.source import KeycloakSource
-from keycloak import KeycloakOpenIDConnection
 from wolf.app import Application
 from wolf.app.middlewares import HTTPSession, NoAnonymous
 from wolf.app.resolvers import RouteResolver
@@ -17,7 +14,8 @@ from wolf.app.services.flash import Flash
 from wolf.app.services.post import PostOffice
 from wolf.app.services.resources import ResourceManager
 from wolf.app.services.translation import TranslationService
-from wolf.rendering.resources import JSResource, CSSResource
+from html_resources.resources import JSResource, CSSResource
+from html_resources.store import Filestore, Repository
 from wolf.rendering.templates import Templates
 from wolf.rendering.ui import UI
 from wolf_sql import SQLDatabase
@@ -26,22 +24,6 @@ from . import register, login, views, actions, ui, folder, document, db, models 
 
 
 logger = structlog.get_logger("example.routing")
-
-
-# keycloak_connection = KeycloakOpenIDConnection(
-#     server_url="http://localhost:9090",
-#     realm_name="novareto.de",
-#     client_id="novareto_de",
-#     client_secret_key="JcVTUM6IGK4CR51yw4Qg1K6WL1XAeblt",
-#     verify=False,  # BBB attention
-# )
-
-# keycloak_source = KeycloakSource(
-#     keycloak_connection,
-#     title="Keycloak source",
-#     description="Keycloak users on the novareto.de realm",
-#     actions=(Challenge, Fetch)
-# )
 
 # COMPILE PO FILES
 vernacular.COMPILE = True
@@ -59,9 +41,20 @@ database_source = db.DBSource(
 )
 
 
-libraries = ResourceManager('/static')
-libraries.add_package_static('deform:static')
-libraries.add_static('example', HERE / 'static', restrict=('*.jpg', '*.ico'))
+libraries = Repository()
+libraries.add(
+    Filestore.from_package_directory(
+        'deform:static',
+        'deform:static'
+    )
+)
+libraries.add(
+    Filestore.from_discovery(
+        'example',
+        HERE / 'static',
+        restrict=('*.jpg', '*.ico')
+    )
+)
 
 app = Application(
     resolver=RouteResolver(),
@@ -84,7 +77,7 @@ app = Application(
 )
 
 app.use(
-    libraries,
+    ResourceManager(libraries, '/static'),
     PostOffice(
         path=HERE / 'test.mail'
     ),
@@ -130,7 +123,6 @@ app.use(
     SessionAuthenticator(
         sources={
             "sql": database_source,
-            #"keycloak": keycloak_source
         },
         user_key="user"
     ),
