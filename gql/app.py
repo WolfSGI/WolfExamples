@@ -4,6 +4,7 @@ from wolf.app import Application
 from wolf.app.resolvers import RouteResolver
 from wolf_sql import SQLDatabase
 from .views import router
+from .models import sql_registry
 
 
 logger = structlog.get_logger("example.graphql")
@@ -17,5 +18,9 @@ app = Application(
 )
 
 app.use(
-    SQLDatabase(url=f"sqlite:///{HERE / 'database.db'}", echo=True),
+    SQLDatabase(
+        url=f"sqlite:///{HERE / 'database.db'}",
+        echo=True,
+        registries=[sql_registry]
+    ),
 )

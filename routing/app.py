@@ -119,7 +119,11 @@ app.use(
             )
         }
     ),
-    SQLDatabase(url=f"sqlite:///{HERE / 'database.db'}", echo=True),
+    SQLDatabase(
+        url=f"sqlite:///{HERE / 'database.db'}",
+        echo=True,
+        registries=[models.sql_registry]
+    ),
     SessionAuthenticator(
         sources={
             "sql": database_source,

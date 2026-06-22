@@ -1,30 +1,36 @@
 import pathlib
 import structlog
 import http_session_file
+from html_resources.resources import JSResource, CSSResource
+from html_resources.store import Filestore, Repository
 from wolf.app import Application
 from wolf.app.middlewares import HTTPSession
 from wolf.app.resolvers import TrajectResolver
 from wolf.app.services.flash import Flash
 from wolf.app.services.post import PostOffice
 from wolf.app.services.resources import ResourceManager
-from wolf.rendering.resources import CSSResource, JSResource
 from wolf.rendering.templates import Templates
 from wolf.rendering.ui import UI
 from wolf_jwt import JWTService
 from wolf_sql import SQLDatabase
 
-from . import ui, views, store, factories, resources  # noqa
+from . import models, ui, views, store, factories, resources  # noqa
 
 
 logger = structlog.get_logger("example.traject")
 HERE = pathlib.Path(__file__).parent.resolve()
 
 
-libraries = ResourceManager('/static')
-libraries.add_package_static('deform:static')
-libraries.add_library(resources.static)
-libraries.add_library(resources.my_super_lib)
-libraries.add_library(resources.my_lib)
+libraries = Repository()
+libraries.add(
+    Filestore.from_package_directory(
+        'deform:static',
+        'deform:static'
+    )
+)
+libraries.add(resources.static)
+libraries.add(resources.my_super_lib)
+libraries.add(resources.my_lib)
 
 
 app = Application(
@@ -50,7 +56,7 @@ app.services.register_value(store.Stores, store.stores)
 
 
 app.use(
-    libraries,
+    ResourceManager(libraries, '/static'),
     JWTService(
         private_key=HERE / 'identities' / 'jwt.priv',
         public_key=HERE / 'identities' / 'jwt.pub'
@@ -58,7 +64,10 @@ app.use(
     PostOffice(
         path=HERE / 'test.mail'
     ),
-    SQLDatabase(url=f"sqlite:///{HERE / 'database.db'}"),
+    SQLDatabase(
+        url=f"sqlite:///{HERE / 'database.db'}",
+        registries=[models.sql_registry],
+    ),
     Flash(),
     UI(
         slots=ui.slots,

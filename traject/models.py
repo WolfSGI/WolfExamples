@@ -3,9 +3,13 @@ import jsonschema_colander.types
 from sqlmodel import Field, SQLModel, Relationship
 from sqlalchemy import JSON, Column
 from pydantic import computed_field
+from sqlalchemy.orm import registry
 
 
-class Model(SQLModel):
+sql_registry = registry()
+
+
+class Model(SQLModel, registry=sql_registry):
 
     @classmethod
     def get_schema(cls,

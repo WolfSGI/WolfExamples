@@ -1,9 +1,13 @@
 from pydantic import computed_field
 from sqlmodel import Field, SQLModel, Relationship
 from typing import Mapping
+from sqlalchemy.orm import registry
 
 
-class Person(SQLModel, table=True):
+sql_registry = registry()
+
+
+class Person(SQLModel, table=True, registry=sql_registry):
     id: int | None = Field(default=None, primary_key=True)
     email: str = Field(unique=True)
     name: str | None = None
@@ -21,7 +25,7 @@ class Person(SQLModel, table=True):
         return self.model_dump()
 
 
-class Folder(SQLModel, table=True):
+class Folder(SQLModel, table=True, registry=sql_registry):
     id: int | None = Field(default=None, primary_key=True)
     name: str
     author_id: int = Field(foreign_key="person.id")
@@ -35,7 +39,7 @@ class Folder(SQLModel, table=True):
         return len(self.documents)
 
 
-class Document(SQLModel, table=True):
+class Document(SQLModel, table=True, registry=sql_registry):
     id: int | None = Field(default=None, primary_key=True)
     title: str
     text: str

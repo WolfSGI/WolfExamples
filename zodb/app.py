@@ -1,14 +1,15 @@
 import http_session_file
 import pathlib
 from authsources.sources.mapping import DictSource, Login, Fetch
+from html_resources.resources import JSResource, CSSResource
+from html_resources.store import Filestore, Repository
 from wolf.abc.resolvers.traversing import PublicationRoot
-from wolf.app.services.auth import SessionAuthenticator
-from wolf.app.middlewares import HTTPSession, NoAnonymous
 from wolf.app import Application
+from wolf.app.middlewares import HTTPSession, NoAnonymous
 from wolf.app.resolvers import TraversingResolver
+from wolf.app.services.auth import SessionAuthenticator
 from wolf.app.services.flash import Flash
 from wolf.app.services.resources import ResourceManager
-from wolf.rendering.resources import CSSResource, JSResource
 from wolf.rendering.templates import Templates
 from wolf.rendering.ui import UI
 from ZODB.FileStorage import FileStorage
@@ -19,11 +20,17 @@ from . import ui, views, resources, middleware, models  # noqa
 
 HERE = pathlib.Path(__file__).parent.resolve()
 
-libraries = ResourceManager('/static')
-libraries.add_package_static('deform:static')
-libraries.add_library(resources.static)
-libraries.add_library(resources.my_super_lib)
-libraries.add_library(resources.my_lib)
+
+libraries = Repository()
+libraries.add(
+    Filestore.from_package_directory(
+        'deform:static',
+        'deform:static'
+    )
+)
+libraries.add(resources.static)
+libraries.add(resources.my_super_lib)
+libraries.add(resources.my_lib)
 
 
 app = Application(
@@ -48,10 +55,10 @@ app = Application(
 )
 
 app.use(
+    ResourceManager(libraries, '/static'),
     middleware.ZODB(db=DB(
         FileStorage(str(HERE / "example.fs"))
     )),
-    libraries,
     Flash(),
     SessionAuthenticator(
         sources={
