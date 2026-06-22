@@ -5,7 +5,11 @@ from sqlalchemy.orm import registry
 sql_registry = registry()
 
 
-class Person(SQLModel, table=True, registry=sql_registry):
+class GQLModel(SQLModel, registry=sql_registry):
+    pass
+
+
+class Person(GQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     email: str = Field(unique=True)
     name: str | None = None
@@ -13,7 +17,7 @@ class Person(SQLModel, table=True, registry=sql_registry):
     documents: list["Document"] = Relationship(back_populates="author")
 
 
-class Document(SQLModel, table=True, registry=sql_registry):
+class Document(GQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     title: str
     text: str
