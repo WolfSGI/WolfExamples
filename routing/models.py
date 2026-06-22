@@ -7,7 +7,11 @@ from sqlalchemy.orm import registry
 sql_registry = registry()
 
 
-class Person(SQLModel, table=True, registry=sql_registry):
+class RoutingModel(SQLModel, registry=sql_registry):
+    pass
+
+
+class Person(RoutingModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     email: str = Field(unique=True)
     name: str | None = None
@@ -25,7 +29,7 @@ class Person(SQLModel, table=True, registry=sql_registry):
         return self.model_dump()
 
 
-class Folder(SQLModel, table=True, registry=sql_registry):
+class Folder(RoutingModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str
     author_id: int = Field(foreign_key="person.id")
@@ -39,7 +43,7 @@ class Folder(SQLModel, table=True, registry=sql_registry):
         return len(self.documents)
 
 
-class Document(SQLModel, table=True, registry=sql_registry):
+class Document(RoutingModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     title: str
     text: str

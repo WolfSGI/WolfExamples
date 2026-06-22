@@ -53,6 +53,10 @@ def all(host: str="0.0.0.0", port: int=8000):
         "/traject": traject_app,
         "zodb": zodb_app,
     })
+
+    for subapp in app.values():
+        subapp.events.lifecycle.on_init.send('startup')
+
     serve(app, listen=f"{host}:{port}")
 
 
