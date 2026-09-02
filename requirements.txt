@@ -1,6 +1,5 @@
 ZODB
 colander
-deform == 3.0.1
 http_session_file
 minicli
 pydantic
@@ -11,6 +10,7 @@ transaction
 waitress
 strawberry-graphql
 sfdb == 0.1.0
+deform@git+https://github.com/Pylons/deform.git@3977582583d8982d3931b1eacf63c4de4841726e
 jsonschema_colander@git+https://github.com/novareto/jsonschema_colander.git
 git+https://github.com/WolfSGI/wolf.git#egg=wolf
 git+https://github.com/WolfSGI/wolf_sql.git#egg=wolf_sql
