@@ -12,9 +12,9 @@ waitress
 strawberry-graphql
 sfdb == 0.1.0
 jsonschema_colander@git+https://github.com/novareto/jsonschema_colander.git
--e git+https://github.com/WolfSGI/wolf.git#egg=wolf
--e git+https://github.com/WolfSGI/wolf_sql.git#egg=wolf_sql
--e git+https://github.com/WolfSGI/wolf_jwt.git#egg=wolf_jwt
--e git+https://github.com/WolfSGI/wolf_form.git#egg=wolf_form
--e git+https://github.com/WolfSGI/ticketed_filestore.git#egg=ticketed_filestore
--e git+https://github.com/WolfSGI/html_resources.git#egg=html_resources
+git+https://github.com/WolfSGI/wolf.git#egg=wolf
+git+https://github.com/WolfSGI/wolf_sql.git#egg=wolf_sql
+git+https://github.com/WolfSGI/wolf_jwt.git#egg=wolf_jwt
+git+https://github.com/WolfSGI/wolf_form.git#egg=wolf_form
+git+https://github.com/WolfSGI/ticketed_filestore.git#egg=ticketed_filestore
+git+https://github.com/WolfSGI/html_resources.git#egg=html_resources
