@@ -25,12 +25,6 @@ app.use(
 )
 
 
-def zodb_root(svcs_container):
-    connection = svcs_container.get(Connection)
-    root = connection.root()
-    return root
-
-
 @app.resolver.router.register('/')
 @html
 def long_task(request):
