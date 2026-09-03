@@ -11,7 +11,7 @@ from ZODB import DB, Connection
 from transaction import Transaction, TransactionManager
 
 
-logger = structlog.get_logger("wolf.examples.zodb")
+logger = structlog.get_logger("wolf.examples.zodb_async")
 
 
 @dataclass(kw_only=True)
