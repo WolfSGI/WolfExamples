@@ -1,5 +1,6 @@
 from minicli import cli, run
 from waitress import serve
+import threading
 
 
 @cli
@@ -41,6 +42,16 @@ def graphql(host: str="0.0.0.0", port: int=8000):
 def upload(host: str="0.0.0.0", port: int=8000):
     from fileupload.app import app
     app.events.lifecycle.on_init.send('startup')
+    serve(app, listen=f"{host}:{port}")
+
+
+@cli
+def websockets(host: str="0.0.0.0", port: int=8000):
+    from ws.app import app, websocket_runner
+    app.events.lifecycle.on_init.send('startup')
+    wst = threading.Thread(target=websocket_runner)
+    wst.daemon = True
+    wst.start()
     serve(app, listen=f"{host}:{port}")
 
 

@@ -8,6 +8,7 @@ rq
 sqlmodel
 transaction
 waitress
+websockets
 strawberry-graphql
 sfdb == 0.1.0
 deform@git+https://github.com/Pylons/deform.git@3977582583d8982d3931b1eacf63c4de4841726e
